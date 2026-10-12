@@ -10,10 +10,9 @@ table fFaturamento
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation UnderlyingDateTimeDataType = Date
-
 	column vendedor_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: f7d343a5-c2cb-4b99-86de-68bac2dfb33f
 		summarizeBy: none
 		sourceColumn: vendedor_id
@@ -21,7 +20,8 @@ table fFaturamento
 		annotation SummarizationSetBy = Automatic
 
 	column lead_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: d496de60-b27a-431c-b984-6f92decbec1a
 		summarizeBy: none
 		sourceColumn: lead_id
@@ -29,7 +29,8 @@ table fFaturamento
 		annotation SummarizationSetBy = Automatic
 
 	column imovel_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 67a6a2c5-4450-4570-a133-94ac8c6d1f63
 		summarizeBy: none
 		sourceColumn: imovel_id
@@ -45,7 +46,7 @@ table fFaturamento
 		annotation SummarizationSetBy = Automatic
 
 	column valor
-		dataType: decimal
+		dataType: double
 		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
 		lineageTag: f7435905-32ab-4f08-a8dd-43497236ebcf
 		summarizeBy: sum
@@ -60,11 +61,12 @@ table fFaturamento
 		queryGroup: Fato
 		source =
 				let
-				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
-				    fFaturamento_Table = Source{[Item="fFaturamento",Kind="Table"]}[Data],
-				    #"Changed Type" = Table.TransformColumnTypes(fFaturamento_Table,{{"data", type date}, {"vendedor_id", type text}, {"lead_id", type text}, {"imovel_id", type text}, {"tipo", type text}, {"valor", Currency.Type}})
+				  Origem = Excel.Workbook(File.Contents("C:\Users\kakaa\Documents\Oficinas\oficinapbi\imobiliarias\baseDados\BaseDados_oficinapbi.xlsx"), null, true),
+				  #"Navegação 1" = Origem{[Item = "fFaturamento", Kind = "Sheet"]}[Data],
+				  #"Cabeçalhos promovidos" = Table.PromoteHeaders(#"Navegação 1", [PromoteAllScalars = true]),
+				  #"Tipo de coluna alterado" = Table.TransformColumnTypes(#"Cabeçalhos promovidos", {{"data", type datetime}, {"vendedor_id", Int64.Type}, {"lead_id", Int64.Type}, {"imovel_id", Int64.Type}, {"tipo", type text}, {"valor", type number}})
 				in
-				    #"Changed Type"
+				  #"Tipo de coluna alterado"
 
 	annotation PBI_ResultType = Table
 

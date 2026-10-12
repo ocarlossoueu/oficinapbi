@@ -10,10 +10,9 @@ table fMeta
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation UnderlyingDateTimeDataType = Date
-
 	column vendedor_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 2233fafb-a57d-4954-9994-ba1bec74e606
 		summarizeBy: none
 		sourceColumn: vendedor_id
@@ -21,7 +20,7 @@ table fMeta
 		annotation SummarizationSetBy = Automatic
 
 	column meta
-		dataType: decimal
+		dataType: double
 		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
 		lineageTag: 88955fb1-53f4-4cfe-aada-83535e2ae3eb
 		summarizeBy: sum
@@ -36,11 +35,12 @@ table fMeta
 		queryGroup: Fato
 		source =
 				let
-				    Fonte = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
-				    fMeta_Table = Fonte{[Item="fMeta",Kind="Table"]}[Data],
-				    #"Tipo Alterado" = Table.TransformColumnTypes(fMeta_Table,{{"vendedor_id", type text}, {"data", type date}, {"meta", Currency.Type}})
+				  Origem = Excel.Workbook(File.Contents("C:\Users\kakaa\Documents\Oficinas\oficinapbi\imobiliarias\baseDados\BaseDados_oficinapbi.xlsx"), null, true),
+				  #"Navegação 1" = Origem{[Item = "fMeta", Kind = "Sheet"]}[Data],
+				  #"Cabeçalhos promovidos" = Table.PromoteHeaders(#"Navegação 1", [PromoteAllScalars = true]),
+				  #"Tipo de coluna alterado" = Table.TransformColumnTypes(#"Cabeçalhos promovidos", {{"data", type datetime}, {"vendedor_id", Int64.Type}, {"meta", type number}})
 				in
-				    #"Tipo Alterado"
+				  #"Tipo de coluna alterado"
 
 	annotation PBI_ResultType = Table
 

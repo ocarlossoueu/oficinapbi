@@ -2,7 +2,8 @@ table dLead
 	lineageTag: 4e7e4a5c-4517-4f77-952e-8a1a8229347a
 
 	column id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 8ad145ea-3b51-4abd-bb8e-b05aa559ae0e
 		summarizeBy: none
 		sourceColumn: id
@@ -22,11 +23,15 @@ table dLead
 		queryGroup: Dimensao
 		source =
 				let
-				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
-				    dLead_Table = Source{[Item="dLead",Kind="Table"]}[Data],
-				    #"Changed Type" = Table.TransformColumnTypes(dLead_Table,{{"id", type text}, {"origem", type text}})
+				  Origem = Excel.Workbook(File.Contents("C:\Users\kakaa\Documents\Oficinas\oficinapbi\imobiliarias\baseDados\BaseDados_oficinapbi.xlsx"), null, true),
+				  #"Navegação 1" = Origem{[Item = "dLead", Kind = "Sheet"]}[Data],
+				  #"Cabeçalhos promovidos" = Table.PromoteHeaders(#"Navegação 1", [PromoteAllScalars = true]),
+				  #"Tipo de coluna alterado" = Table.TransformColumnTypes(#"Cabeçalhos promovidos", {{"id", Int64.Type}, {"Indicação", type text}, {"Facebook", type text}, {"Google", type text}, {"Eventos", type text}}),
+				  #"Outras colunas não dinâmicas" = Table.UnpivotOtherColumns(#"Tipo de coluna alterado", {"id"}, "origem", "Valor"),
+				  #"Linhas filtradas" = Table.SelectRows(#"Outras colunas não dinâmicas", each ([Valor] = "x")),
+				  #"Colunas removidas" = Table.RemoveColumns(#"Linhas filtradas", {"Valor"})
 				in
-				    #"Changed Type"
+				  #"Colunas removidas"
 
 	annotation PBI_ResultType = Table
 

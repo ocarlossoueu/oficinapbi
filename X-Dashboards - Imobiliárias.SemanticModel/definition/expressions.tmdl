@@ -1,5 +1,0 @@
-expression Diretorio = "C:\Users\Leo\Google Drive\1. Power BI\0. Projetos\26. XDashboards\202204XX - Dashboard Imobiliárias\Database\" meta [IsParameterQuery=true, List={"C:\Users\Leo\Google Drive\1. Power BI\0. Projetos\26. XDashboards\202204XX - Dashboard Imobiliárias\Database\"}, DefaultValue="C:\Users\Leo\Google Drive\1. Power BI\0. Projetos\26. XDashboards\202204XX - Dashboard Imobiliárias\Database\", Type="Any", IsParameterQueryRequired=true]
-	lineageTag: 78d1a019-3c43-46aa-ae24-14ebbfc2fa34
-
-	annotation PBI_NavigationStepName = Navegação
-

@@ -1,40 +1,40 @@
-relationship cf8a3efd-0e65-4f8f-8dd6-78f9132379b8
-	fromColumn: fFunil.lead_id
-	toColumn: dLead.id
-
-relationship c77df67c-1b90-4990-87db-4fc176475d99
-	fromColumn: fFaturamento.lead_id
-	toColumn: dLead.id
-
-relationship e6436986-9bf8-4f7f-a0c7-475b78f7d8ba
-	fromColumn: fFaturamento.imovel_id
-	toColumn: dImovel.id
-
-relationship 6c613b21-080d-4562-9e66-4c6a8e1e1346
-	fromColumn: fFaturamento.vendedor_id
-	toColumn: dVendedores.id
-
-relationship 36be14f3-54fd-4e6d-9337-d30f4ecea9b1
-	fromColumn: fFunil.data
-	toColumn: dCalendario.data
-
-relationship 0d34289b-fe36-4225-8c7d-fa75a2482307
+relationship d2681583-a9fc-c4e6-b60d-955a39d3e365
 	fromColumn: fFaturamento.data
 	toColumn: dCalendario.data
 
-relationship 8ca9e811-46ce-4145-8bc2-f103d235e9ba
-	fromColumn: fFunil.vendedor_id
+relationship a12f162b-006d-70e2-a206-c37617f68255
+	fromColumn: fFaturamento.lead_id
+	toColumn: dLead.id
+
+relationship e86ea923-ce59-4929-817f-6a1a72a6adf7
+	fromColumn: fFaturamento.imovel_id
+	toColumn: dImovel.id
+
+relationship ac73ff5d-130f-0cea-6001-0b63fce46009
+	fromColumn: fFaturamento.vendedor_id
 	toColumn: dVendedores.id
 
-relationship 89d7f511-ce2b-42c2-956c-9a8cc7b1f537
+relationship 81468661-2391-cba5-b7f3-5a945ee75a31
+	fromColumn: fFunil.data
+	toColumn: dCalendario.data
+
+relationship 7b5da2a8-622c-4e13-9aff-20b80431828b
 	fromColumn: fFunil.imovel_id
 	toColumn: dImovel.id
 
-relationship 6461640b-d6eb-4c0f-be30-d5606487db7f
+relationship 7daa2fa2-8d40-74bd-5f5a-2712565ef6d8
+	fromColumn: fFunil.lead_id
+	toColumn: dLead.id
+
+relationship a60106f7-c9b0-e054-f507-c2c4ad0744d7
+	fromColumn: fFunil.vendedor_id
+	toColumn: dVendedores.id
+
+relationship 9f409c34-fde4-f4e7-34b3-f96c431b491a
 	fromColumn: fMeta.data
 	toColumn: dCalendario.data
 
-relationship b415a5ce-da1d-4d71-9c62-a2701b32a07e
+relationship fab5a389-e5d8-7ab0-b6ad-a7c42849f8a6
 	fromColumn: fMeta.vendedor_id
 	toColumn: dVendedores.id
 

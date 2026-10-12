@@ -2,7 +2,8 @@ table dImovel
 	lineageTag: c458830b-71c6-4d75-815d-d31bf9d9ea8b
 
 	column id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 936fcaf5-115e-4115-9bc8-92b090923a74
 		summarizeBy: none
 		sourceColumn: id
@@ -30,11 +31,13 @@ table dImovel
 		queryGroup: Dimensao
 		source =
 				let
-				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
-				    dImovel_Table = Source{[Item="dImovel",Kind="Table"]}[Data],
-				    #"Changed Type" = Table.TransformColumnTypes(dImovel_Table,{{"id", type text}, {"uf", type text}, {"cidade", type text}})
+				  Origem = Excel.Workbook(File.Contents("C:\Users\kakaa\Documents\Oficinas\oficinapbi\imobiliarias\baseDados\BaseDados_oficinapbi.xlsx"), null, true),
+				  #"Navegação 1" = Origem{[Item = "dImovel", Kind = "Sheet"]}[Data],
+				  #"Cabeçalhos promovidos" = Table.PromoteHeaders(#"Navegação 1", [PromoteAllScalars = true]),
+				  #"Tipo de coluna alterado" = Table.TransformColumnTypes(#"Cabeçalhos promovidos", {{"id", Int64.Type}, {"uf", type text}, {"cidade", type text}}),
+				  #"Texto extraído antes do delimitador" = Table.TransformColumns(#"Tipo de coluna alterado", {{"uf", each Text.BeforeDelimiter(_, "-", 0), type text}})
 				in
-				    #"Changed Type"
+				  #"Texto extraído antes do delimitador"
 
 	annotation PBI_ResultType = Table
 

@@ -17,11 +17,11 @@ queryGroup Dimensao
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["dImovel","dLead","dVendedores","fFaturamento","fFunil","fMeta","Medidas","Diretorio","auxMeta"]
+annotation PBI_QueryOrder = ["dImovel","dLead","dVendedores","fFaturamento","fFunil","fMeta","Medidas","auxMeta"]
 
 annotation __TEdtr = 1
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","DaxQueryView_Desktop"]
 
 ref table dImovel
 ref table dLead
