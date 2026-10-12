@@ -1,0 +1,45 @@
+table auxMeta
+	lineageTag: d60837ba-8778-4696-9f0f-52d582c2e646
+
+	column id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ce22b99-364a-4aa4-b3c4-6705b96c4701
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: af436486-b588-49cc-9a81-f3a8053f5fdd
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column kpi
+		dataType: string
+		lineageTag: 79890d6e-7961-40de-8558-d82bcce86e9d
+		summarizeBy: none
+		sourceColumn: kpi
+		sortByColumn: id
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition auxMeta-a3b91636-e27d-4141-9b0f-ef082ce33761 = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMlTSUXJKLEktBdIf5k/ZoxSrE61kBOT4HV6cr4AksxssYwzkhOSn5BcD6Uf9u5RiYwE=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [id = _t, status = _t, #"Coluna 2" = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"id", Int64.Type}, {"status", type text}, {"Coluna 2", type text}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"Coluna 2", "kpi"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegação
+

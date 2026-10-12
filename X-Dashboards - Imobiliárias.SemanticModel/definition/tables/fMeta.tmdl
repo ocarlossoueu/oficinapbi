@@ -1,0 +1,46 @@
+table fMeta
+	lineageTag: a73c8e29-f012-432a-a5a7-dc5c8954deb2
+
+	column data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5f2beef0-c97b-4350-a667-5db7eed61d4b
+		summarizeBy: none
+		sourceColumn: data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column vendedor_id
+		dataType: string
+		lineageTag: 2233fafb-a57d-4954-9994-ba1bec74e606
+		summarizeBy: none
+		sourceColumn: vendedor_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column meta
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 88955fb1-53f4-4cfe-aada-83535e2ae3eb
+		summarizeBy: sum
+		sourceColumn: meta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fMeta-7061d18a-769f-42ee-a740-777d2334f802 = m
+		mode: import
+		queryGroup: Fato
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
+				    fMeta_Table = Fonte{[Item="fMeta",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(fMeta_Table,{{"vendedor_id", type text}, {"data", type date}, {"meta", Currency.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+

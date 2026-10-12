@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "X-Dashboards - Imobiliárias"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2ababda1-e018-4a94-9702-a9c4be6ef1df"
+  }
+}

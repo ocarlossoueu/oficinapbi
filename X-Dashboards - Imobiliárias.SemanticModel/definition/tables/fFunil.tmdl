@@ -1,0 +1,61 @@
+table fFunil
+	lineageTag: 10eabab5-f6ef-409d-8a81-4b8c2dfd334b
+
+	column data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: eef68b18-2e6d-4df1-8fca-2071c3beff83
+		summarizeBy: none
+		sourceColumn: data
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column etapa
+		dataType: string
+		lineageTag: 762fda29-4f46-42fe-b89b-751ea264c2ef
+		summarizeBy: none
+		sourceColumn: etapa
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_id
+		dataType: string
+		lineageTag: e832670e-db66-4c4c-9fc9-1b34a7e50df0
+		summarizeBy: none
+		sourceColumn: lead_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column vendedor_id
+		dataType: string
+		lineageTag: c46f2dfa-71fe-4699-9f67-8aa69627262a
+		summarizeBy: none
+		sourceColumn: vendedor_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column imovel_id
+		dataType: string
+		lineageTag: 5eb3c90f-b9c9-42fb-8030-e1686ad29a3e
+		summarizeBy: none
+		sourceColumn: imovel_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fFunil-2cf9e6c3-4aa1-4b88-8493-5de92a061fb6 = m
+		mode: import
+		queryGroup: Fato
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
+				    fFunil_Table = Source{[Item="fFunil",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(fFunil_Table,{{"data", type date}, {"etapa", type text}, {"lead_id", type text}, {"vendedor_id", type text}, {"imovel_id", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

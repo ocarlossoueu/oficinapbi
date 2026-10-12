@@ -1,0 +1,51 @@
+table dCalendario
+	lineageTag: c0a95d84-b60b-4c03-b592-441769d086b8
+
+	column data
+		formatString: Short Date
+		lineageTag: 67361cfa-590c-497c-96ab-9400bcea9d64
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+	column mes = MONTH(dCalendario[data])
+		formatString: 0
+		lineageTag: 495c88f0-a22a-4f61-a489-d1366b164fac
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_mes = FORMAT(dCalendario[data], "MMMM")
+		lineageTag: 1da1abff-49d3-4311-969a-212aee51e492
+		summarizeBy: none
+		sortByColumn: mes
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column abrev_mes = FORMAT(dCalendario[data], "mmm")
+		lineageTag: 37e31d7a-da86-41aa-80e4-6e76b1dfd42a
+		summarizeBy: none
+		sortByColumn: mes
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column ano = YEAR(dCalendario[data])
+		formatString: 0
+		lineageTag: 1f53f360-f1a2-4d17-a66e-8d88b314ba9d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario-3802d700-670b-48c4-ba40-28e695b77d3e = calculated
+		mode: import
+		source = CALENDARAUTO()
+
+	annotation PBI_Id = 3a3e879cf79c44218f14af3f64848514
+

@@ -1,0 +1,32 @@
+table dLead
+	lineageTag: 4e7e4a5c-4517-4f77-952e-8a1a8229347a
+
+	column id
+		dataType: string
+		lineageTag: 8ad145ea-3b51-4abd-bb8e-b05aa559ae0e
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column origem
+		dataType: string
+		lineageTag: 07681af1-7b78-4122-89f8-6d7a6bf14553
+		summarizeBy: none
+		sourceColumn: origem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dLead-7976073a-60e2-4d8e-9d49-b51e01c8b7af = m
+		mode: import
+		queryGroup: Dimensao
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
+				    dLead_Table = Source{[Item="dLead",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dLead_Table,{{"id", type text}, {"origem", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

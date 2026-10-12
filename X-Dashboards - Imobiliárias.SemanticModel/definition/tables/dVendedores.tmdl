@@ -1,0 +1,32 @@
+table dVendedores
+	lineageTag: 4407941f-40bf-46d4-9b45-f1f840ea9dde
+
+	column id
+		dataType: string
+		lineageTag: 5998950e-3c31-46a8-9489-1b7c6d9740bd
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_completo
+		dataType: string
+		lineageTag: be573249-e615-4278-a0f6-b82ce5d7e853
+		summarizeBy: none
+		sourceColumn: nome_completo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dVendedores-e1eef79e-2682-4c27-bb60-bb523a6624ac = m
+		mode: import
+		queryGroup: Dimensao
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents(Diretorio & "Database.xlsx"), null, true),
+				    dVendedores_Table = Source{[Item="dVendedores",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(dVendedores_Table,{{"id", type text}, {"nome_completo", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

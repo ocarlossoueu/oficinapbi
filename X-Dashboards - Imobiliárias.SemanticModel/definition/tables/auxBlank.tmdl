@@ -1,0 +1,31 @@
+table auxBlank
+	lineageTag: 136ee42b-6583-43ab-99f3-9e29b01de233
+
+	calculationGroup
+
+		calculationItem 'Ajustar Blank' =
+				SWITCH (
+				    TRUE(),
+				    ISBLANK ( SELECTEDMEASURE() ),
+				    "-",
+				    SELECTEDMEASURE()
+				)
+
+	column 'Ajustar blank'
+		dataType: string
+		lineageTag: 17bf6fe9-8f30-4577-9d61-309df6abee15
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		lineageTag: 6c87c140-db79-4834-b6c6-d84f8d6ac8fb
+		summarizeBy: sum
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = Automatic
+

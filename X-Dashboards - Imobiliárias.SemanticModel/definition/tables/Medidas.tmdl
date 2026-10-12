@@ -1,0 +1,180 @@
+table Medidas
+	lineageTag: 022a318b-2dd4-4e89-b0ed-ee4c16cbb308
+
+	measure '$ Faturamento' = SUM ( fFaturamento[valor] )
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: 13ecf316-4e71-4b41-b1b5-065793762c50
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Conversão em Vendas' = ```
+			
+			VAR varLeadsInteressados = 
+			CALCULATE ( 
+			    COUNTROWS ( fFunil ),
+			    fFunil[etapa] = "Interesse"
+			)
+			
+			VAR varLeadsConvertidos = 
+			CALCULATE ( 
+			    COUNTROWS ( fFunil ),
+			    fFunil[etapa] = "Contrato"
+			)
+			
+			RETURN
+			DIVIDE ( varLeadsConvertidos, varLeadsInteressados )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 466eb7f4-7b06-48ba-946e-c16204deaaff
+
+		changedProperty = FormatString
+
+	measure 'QTD Lead Funil' = ```
+			DISTINCTCOUNT ( fFunil[lead_id] ) 
+			```
+		formatString: #,0
+		lineageTag: c4d189c6-bd86-41c5-9fea-08292f386bf6
+
+		changedProperty = FormatString
+
+	measure 'QTD Total de Imóveis' = DISTINCTCOUNT ( fFaturamento[imovel_id] )
+		formatString: 0
+		lineageTag: ceec8e6d-717b-40db-8e3a-e8ae6f4ef251
+
+	measure 'Tempo Médio Fechamento' = ```
+			
+			VAR varTabela = 
+			ADDCOLUMNS(
+			    ADDCOLUMNS (
+			        SUMMARIZE ( 
+			            fFunil,
+			            dLead[id]
+			        ),
+			        "@interesse_data", FIRSTDATE ( fFunil[data] ),
+			        "@contrato_data", CALCULATE ( LASTDATE ( fFunil[data] ), fFunil[etapa] = "Contrato" )
+			    ),
+			    "@dias_ate_fechamento", DATEDIFF ( [@interesse_data], [@contrato_data], DAY )
+			)
+			RETURN
+			ROUND(
+			    AVERAGEX (
+			        varTabela,
+			        [@dias_ate_fechamento]
+			    ),
+			    0
+			)
+			```
+		formatString: #0#" dias"
+		lineageTag: 47818cda-d75c-407e-b070-14d52624cc0e
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'QTD Visitas Até Fechamento' = ```
+			
+			VAR varTabela = 
+			FILTER (
+			    ADDCOLUMNS (
+			        SUMMARIZE ( 
+			            fFunil,
+			            dLead[id]
+			        ),
+			        "@visitas",
+			        CALCULATE ( 
+			            COUNTROWS ( fFunil ),
+			            fFunil[etapa] = "Visita"
+			        ),
+			        "@contrato",
+			        CALCULATE ( 
+			            COUNTROWS ( fFunil ),
+			            fFunil[etapa] = "Contrato"
+			        )
+			    ),
+			    [@contrato] <> 0 
+			)
+			
+			RETURN
+			ROUND(
+			    AVERAGEX (
+			        varTabela,
+			        [@visitas]
+			    ),
+			    0
+			)
+			```
+		formatString: 0" visitas"
+		lineageTag: f1e4192a-e89b-4f20-a50c-55d833a3921d
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'QTD Vendas' = DISTINCTCOUNT ( fFaturamento[imovel_id] )
+		formatString: 0
+		lineageTag: 60be0749-918b-4950-91eb-389543a87eae
+
+	measure '% Dif Meta' = DIVIDE ( [$ Faturamento] - [$ Meta], [$ Meta] )
+		formatString: 0%;-0%;0%
+		lineageTag: 98abd3c9-f437-42a9-9647-275e63a582be
+
+		changedProperty = FormatString
+
+	measure '$ Meta' = SUM ( fMeta[meta] )
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: df4e5627-97d3-481d-9bfe-0c87c9fef238
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Selecao Status' = ```
+			
+			VAR varSelecao = SELECTEDVALUE ( auxMeta[status] )
+			VAR varResultado = 
+			SWITCH ( 
+			    TRUE(),
+			    varSelecao = "Bateu", IF ( [% Dif Meta] >= 0, 1, 0 ),
+			    varSelecao = "Não bateu", IF ( [% Dif Meta] < 0, 1, 0 ),
+			    varSelecao = "Todos", 1
+			)
+			RETURN
+			varResultado
+			```
+		formatString: 0
+		lineageTag: 70e7c4ce-53bb-40e7-ade6-f2ee2f97c161
+
+	measure '$ Dif Meta' = [$ Faturamento] - [$ Meta]
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: d3949140-ace0-4a5c-a020-dd0d1cd2fe18
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'vs Meta' = ```
+			
+			"vs Meta: " & 
+			FORMAT([$ Meta], "R$ 0,0") & 
+			" (" & 
+			FORMAT([% Dif Meta], "0%") &
+			")"
+			```
+		lineageTag: 11725efc-35bf-4b0d-b7cf-cc03a2981e68
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Medidas-198f960c-820b-447d-9b58-54d289bb9676 = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
